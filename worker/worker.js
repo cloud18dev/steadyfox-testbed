@@ -28,4 +28,15 @@ export default {
     }
     return new Response("<h1>OK steadyfox testbed</h1>", { status: 200, headers: { "content-type": "text/html" } });
   },
+
+  // Cron Trigger: starts the fake job every 15 minutes (GitHub's own schedule is unreliable)
+  async scheduled(event, env) {
+    if (!env.GH_TOKEN) return;
+    const res = await fetch("https://api.github.com/repos/cloud18dev/steadyfox-testbed/actions/workflows/fake-job.yml/dispatches", {
+      method: "POST",
+      headers: { authorization: `Bearer ${env.GH_TOKEN}`, accept: "application/vnd.github+json", "user-agent": "steadyfox-testbed" },
+      body: JSON.stringify({ ref: "main" }),
+    });
+    if (!res.ok) throw new Error(`dispatch failed: ${res.status} ${await res.text()}`);
+  },
 };

@@ -2,7 +2,7 @@
 
 A controlled environment for comparing monitoring tools (Healthchecks.io, Better Stack, Cronitor, Hyperping, UptimeRobot) before building Steadyfox. Every tool watches the same fake job and the same fake website, and you decide what breaks. That means you always know what each tool *should* have caught.
 
-- **Fake job**: a GitHub Actions workflow that runs every 15 minutes and reports to each tool's heartbeat URL ([`job.sh`](job.sh)).
+- **Fake job**: a GitHub Actions workflow, started every 15 minutes by a Cloudflare Cron Trigger, that reports to each tool's heartbeat URL ([`job.sh`](job.sh)).
 - **Fake website**: a Cloudflare Worker whose behaviour you switch from the terminal ([`worker/`](worker/)).
 - **Scorecard**: where results go ([`scorecard.md`](scorecard.md)).
 
@@ -38,7 +38,10 @@ npx wrangler login
 npx wrangler kv namespace create STATE     # paste the printed id into wrangler.toml
 npx wrangler deploy                        # https://steadyfox-testbed.raul-b9f.workers.dev
 npx wrangler kv key put --binding=STATE mode up --remote
+npx wrangler secret put GH_TOKEN           # starts the fake job, see below
 ```
+
+The Worker's Cron Trigger starts the fake job every 15 minutes, because GitHub's own `schedule:` never fired for this repo. `GH_TOKEN` is a [fine-grained token](https://github.com/settings/personal-access-tokens/new) scoped to this repository only, with **Actions: Read and write** permission. Without it, the job only runs when started by hand.
 
 In every tool except Healthchecks.io (it only receives pings and never checks URLs), add an HTTP monitor for the Worker URL with the same interval and timeout, plus a keyword check for `OK` where supported. For SSL alerts, also add [expired.badssl.com](https://expired.badssl.com) and [self-signed.badssl.com](https://self-signed.badssl.com).
 
@@ -78,7 +81,7 @@ npx wrangler kv key put --binding=STATE mode down --remote   # from worker/
 | `eu-down` | 503 only for checks from Europe | Multi-region confirmation |
 | `broken` | 200 with an error page | Keyword checks |
 
-KV changes can take up to about 60 seconds to reach every region, so note the time you switched. `npx wrangler tail` shows each check's user agent and region, which tells you how often each tool really checks and from where.
+KV changes took about 5 seconds to apply in testing (Cloudflare allows up to 60), so note the time you switched. `npx wrangler tail` shows each check's user agent and region, which tells you how often each tool really checks and from where.
 
 ## Plan (about 2 weekends)
 
@@ -91,7 +94,6 @@ KV changes can take up to about 60 seconds to reach every region, so note the ti
 
 ## Caveats
 
-- GitHub delays scheduled runs under load, so expect occasional "late" alerts that are GitHub's fault. Check the run's start time before blaming the tool.
+- Cloudflare starts the job on time, but GitHub can still queue the runner for a minute or two. Check the run's start time before blaming a tool for a "late" alert.
 - `fail` exits 0 on purpose. A red workflow makes GitHub email you, which would mix GitHub's notifications into the comparison.
-- GitHub disables scheduled workflows in public repos after 60 days without repository activity.
 - Ping endpoints come from each tool's documentation at the time of writing. If a tool rejects a ping, check the warning in the run log.

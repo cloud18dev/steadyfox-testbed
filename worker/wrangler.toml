@@ -5,3 +5,7 @@ compatibility_date = "2026-10-01"
 [[kv_namespaces]]
 binding = "STATE"
 id = "9497f0835bea41678a37ea8d361c4639"
+
+# Starts the fake job (needs the GH_TOKEN secret, see README)
+[triggers]
+crons = ["*/15 * * * *"]

@@ -1,15 +1,12 @@
 name: fake-job
 
+# Started every 15 minutes by the Worker's Cron Trigger (worker/worker.js).
+# GitHub's own schedule never fired for this repo.
 on:
-  schedule:
-    # Every 15 minutes. GitHub delays scheduled runs by 5-15 minutes under load,
-    # so configure every monitor with period 15 min and grace 10 min.
-    - cron: "*/15 * * * *"
   workflow_dispatch:
     inputs:
       scenario:
-        description: "success | slow | zero | fail | hang | skip | random"
-        default: success
+        description: "success | slow | zero | fail | hang | skip | random (blank = SCENARIO variable)"
 
 jobs:
   run:
