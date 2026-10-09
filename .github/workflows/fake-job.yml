@@ -1,0 +1,26 @@
+name: fake-job
+
+on:
+  schedule:
+    # Every 15 minutes. GitHub delays scheduled runs by 5-15 minutes under load,
+    # so configure every monitor with period 15 min and grace 10 min.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: "success | slow | zero | fail | hang | skip | random"
+        default: success
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./job.sh
+        env:
+          SCENARIO: ${{ inputs.scenario || vars.SCENARIO || 'success' }}
+          HC_URL: ${{ secrets.HC_URL }}
+          CRONITOR_URL: ${{ secrets.CRONITOR_URL }}
+          BETTERSTACK_URL: ${{ secrets.BETTERSTACK_URL }}
+          HYPERPING_URL: ${{ secrets.HYPERPING_URL }}
