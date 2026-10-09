@@ -36,7 +36,7 @@ A tool without a secret is skipped. The URLs stay out of the code, so the repo c
 cd worker
 npx wrangler login
 npx wrangler kv namespace create STATE     # paste the printed id into wrangler.toml
-npx wrangler deploy                        # prints the https://steadyfox-testbed.<you>.workers.dev URL
+npx wrangler deploy                        # https://steadyfox-testbed.raul-b9f.workers.dev
 npx wrangler kv key put --binding=STATE mode up --remote
 ```
 
