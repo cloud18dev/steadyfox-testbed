@@ -40,7 +40,7 @@ npx wrangler deploy                        # https://steadyfox-testbed.raul-b9f.
 npx wrangler kv key put --binding=STATE mode up --remote
 ```
 
-In every tool, add an HTTP monitor for the Worker URL with the same interval and timeout, plus a keyword check for `OK` where supported. For SSL alerts, also add [expired.badssl.com](https://expired.badssl.com) and [self-signed.badssl.com](https://self-signed.badssl.com).
+In every tool except Healthchecks.io (it only receives pings and never checks URLs), add an HTTP monitor for the Worker URL with the same interval and timeout, plus a keyword check for `OK` where supported. For SSL alerts, also add [expired.badssl.com](https://expired.badssl.com) and [self-signed.badssl.com](https://self-signed.badssl.com).
 
 ## Running scenarios
 
