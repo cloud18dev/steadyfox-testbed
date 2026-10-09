@@ -43,12 +43,14 @@ Fill in one row per tool. For scenario cells, record: **✅ / ❌**, time to ale
 
 ## Check frequency and regions (from `wrangler tail`)
 
+Sample: 10 minutes on 9 Oct 2026, 13:12–13:22 UTC, default settings.
+
 | Tool | Checks per hour | Regions seen | User agent |
 | --- | --- | --- | --- |
-| Better Stack | | | |
-| Cronitor | | | |
-| Hyperping | | | |
-| UptimeRobot | | | |
+| Better Stack | ~120 (20 in 10 min, 5 per region) | SG, AU, DE, US | `Better Stack Better Uptime Bot …`, GET |
+| Cronitor | not identified in sample | | |
+| Hyperping | ~120 (20 in 10 min) | US, IN, FR, KR, NL, CA, GB, SG, DE, JP (rotating) | `Hyperping/1.0`, GET |
+| UptimeRobot | ~12 (every 5 min) | US only | `UptimeRobot/2.0`, **HEAD** (plain HTTP monitor, can't see page content) |
 
 ## Takeaways for Steadyfox
 
