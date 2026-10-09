@@ -20,7 +20,7 @@ In each tool, create one cron/heartbeat monitor with the **same settings**: peri
 | --- | --- | --- |
 | Healthchecks.io | `HC_URL` | `https://hc-ping.com/<uuid>` |
 | Cronitor | `CRONITOR_URL` | Telemetry URL: `https://cronitor.link/p/<api-key>/<monitor-key>` |
-| Better Stack | `BETTERSTACK_URL` | `https://uptime.betterstack.com/api/v1/heartbeat/<token>` |
+| Better Stack | `BETTERSTACK_URL` | Heartbeat URL, e.g. `https://incidents.betterstack.com/api/v1/heartbeat/<token>` |
 | Hyperping | `HYPERPING_URL` | Ping URL from the cron monitor's settings |
 | UptimeRobot | — | Heartbeats likely need a paid plan, so use UptimeRobot for the uptime half only |
 
